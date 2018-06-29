@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FixMapper>
+ <Cusip tag="48"/>
+ <TradeDate tag="75"/>
+ <SettlementDate tag="9114"/>
+ <TransactionTime tag ="60"/>
+ <Price tag="31"/>
+ <TraderId tag="55"/>
+ <Quantity tag="38"/>
+ <Side tag="15" />
+</FixMapper>

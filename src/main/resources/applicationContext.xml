@@ -1,0 +1,37 @@
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns="http://www.springframework.org/schema/integration"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                                 http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+	<beans:bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<beans:property name="corePoolSize" value="5" />
+		<beans:property name="maxPoolSize" value="10" />
+		<beans:property name="WaitForTasksToCompleteOnShutdown" value="true" />
+	</beans:bean>
+	
+	<!-- Component scan to find all Spring components -->
+    <context:component-scan base-package="com.trades.processor.*" />
+
+    <!-- A Spring Integration channel -->
+    <channel id="fixTradeChannel" />
+    
+    <!-- A Spring Integration channel -->
+    <channel id="dispatcherChannel" />
+
+    <!-- A Spring Integration adapter that routes messages sent to the fixTradeChannel to the bean named "fixTradeProcessorImpl"'s processTrade() method -->
+    <service-activator input-channel="fixTradeChannel" ref="fixTradeProcessorImpl" method="processTrade" />  
+    
+    <!-- A Spring Integration adapter that routes messages sent to the fixTradeChannel to the bean named "fixTradeProcessorImpl"'s processTrade() method -->
+    <service-activator input-channel="dispatcherChannel" ref="dispatcherImpl" method="dispatch" />  
+
+	<!-- beans:bean id="messageProcessor" class="com.trades.processor.demo">
+  		<beans:property name="accountEnrichment" ref="accountEnrichment"/>
+  		<beans:property name="instrumentEnrichment" ref="instrumentEnrichment"/>
+  		<beans:property name="regulatoryEnrichment" ref="regulatoryEnrichment"/>
+    </beans:bean -->
+	
+</beans:beans>
