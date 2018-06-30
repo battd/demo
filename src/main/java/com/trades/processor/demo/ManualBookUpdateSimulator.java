@@ -6,12 +6,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
 import com.trades.processor.caches.Book;
 import com.trades.processor.caches.BookCache;
 
 @Component
+@EnableAsync
 @Scope("prototype")
 public class ManualBookUpdateSimulator implements Runnable {
 	
@@ -28,16 +30,14 @@ public class ManualBookUpdateSimulator implements Runnable {
 	public void run() {
 		String[] traders = {"davidb","sudars","abdoa"};
 		Random r = new Random();
-		for(int i=0;i<1000000;i++) {
+		for(int i=0;i<10000;i++) {
 			try {
-			Integer index = r.nextInt(2);
-			LOGGER.error("HERE !!!!!");
+			Integer index = r.nextInt(2);			
 			Book b = bookCache.getBookCache().get(traders[index]);
 			b.setBookId("GEN" + i);
 			bookCache.getBookCache().put(b.getTraderId(), b);
-			LOGGER.info("Updated Book " + b.getBookId());
-			
-				Thread.sleep(200);
+			LOGGER.info("Updated Book " + b.getBookId());			
+			Thread.sleep(200);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

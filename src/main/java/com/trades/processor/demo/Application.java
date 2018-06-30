@@ -1,36 +1,50 @@
 package com.trades.processor.demo;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
 
-public class Application {
+import com.trades.processor.config.BondTradeConfiguration;
 
-	public static void main(String[] args) {			
+@SpringBootApplication
+@EnableAsync
+@Import(BondTradeConfiguration.class)
+public class Application implements CommandLineRunner {	
+
+    @Autowired
+    public TaskExecutor taskExecutor;
+    
+    @Autowired
+    public ManualBookUpdateSimulator manualBookUpdateSimulator;
+    
+    @Autowired
+    public TradeSimulator tradeSimulatorImpl; 
+    
+    
+	public static void main(String[] args) {
 		
-		final Logger LOGGER = LogManager.getLogger(Application.class.getName());
-		
-        LOGGER.debug("Debug Message Logged !!!");
-        LOGGER.info("Info Message Logged !!!");
-        LOGGER.error("Error Message Logged !!!", new NullPointerException("NullError"));
-		
-        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext( "applicationContext.xml" );
-        TradeSimulator tradeSimulator = applicationContext.getBean( "tradeSimulatorImpl", TradeSimulator.class );
-        ThreadPoolTaskExecutor taskExecutor = (ThreadPoolTaskExecutor) applicationContext.getBean("taskExecutor");                
-        taskExecutor.execute(applicationContext.getBean(ManualBookUpdateSimulator.class));
-            	
-       for (int t=0;t<2;t++) {
-        		tradeSimulator.Simulate();
-        		try {
-					Thread.sleep(400);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-        	}
-        }            
+		SpringApplication.run(Application.class, args);
 
-        applicationContext.close();
+	}
 
+	@Override
+	public void run(String... args) throws Exception {
+		
+        for (int t=0;t<200;t++) {
+    		tradeSimulatorImpl.Simulate();
+    		try {
+				Thread.sleep(400);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+    	}
+    }  
+        
+      taskExecutor.execute(manualBookUpdateSimulator);
+		
 	}
 
 }

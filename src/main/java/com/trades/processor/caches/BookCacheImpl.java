@@ -5,15 +5,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BookCache  {	
+public class BookCacheImpl implements BookCache  {	
 	
 	private ConcurrentHashMap<String, Book> bookMap = new ConcurrentHashMap<>();
 	
+	/* (non-Javadoc)
+	 * @see com.trades.processor.caches.BookCache#getBookCache()
+	 */
+	@Override
 	public ConcurrentHashMap<String, Book> getBookCache() {
 		return bookMap;
 	}
 
-	public BookCache() {
+	public BookCacheImpl() {
 		Book primeBook = new Book();
 		primeBook.setTraderId("davidb");
 		primeBook.setBookId("MAIN");

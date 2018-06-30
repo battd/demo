@@ -14,52 +14,43 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import com.trades.processor.caches.BookCache;
+import com.trades.processor.product.AccountEnricher;
 import com.trades.processor.product.BondTrade;
 
 @Service
 public class FixTradeProcessorImpl implements FixTradeProcessor {
 	
-	final Logger LOGGER = LogManager.getLogger(FixTradeProcessorImpl.class.getName());
-
-	public BookCache bookCache;
-
-	@Autowired
-	public void setBookCache(BookCache bookCache) {
-		this.bookCache = bookCache;
-	}
+	final Logger LOGGER = LogManager.getLogger(FixTradeProcessorImpl.class.getName());	
+	
+	private AccountEnricher accountEnricher;
 	
 	@Autowired
     private MessageChannel dispatcherChannel;
+	
+	public FixTradeProcessorImpl(AccountEnricher accountEnricher) {
+		this.accountEnricher = accountEnricher;
+	}
 
 	@Override
+	@ServiceActivator(inputChannel = "fixTradeChannel")
+	//Template Method Operations
 	public void processTrade(String string) {
 		
 		BondTrade trade = mapCreateXmlObject(string);
-        enrichAccounts(trade);
+		//sets the risk book, different bean can be injected for account Enricher
+        trade.setRiskBook(accountEnricher.enrichAccounts(trade.getTraderId()));
         //enrichInstrument();
         //enrichRegulatory();
         //persistMessage();
         sendToDispatcher(trade); 
-	}
-	
-	private void enrichAccounts(BondTrade trade) {
-       
-		try {
-
-			String theBook = bookCache.getBookCache().get(trade.getTraderId()).getBookId();
-			LOGGER.info("The book name is: " + theBook);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
-		
-	}
+	}	
 
 	private void sendToDispatcher(BondTrade trade) {
 		 try {
@@ -76,7 +67,7 @@ public class FixTradeProcessorImpl implements FixTradeProcessor {
 		 
 	}
 	
-	protected BondTrade mapCreateXmlObject(String fixMessage) {
+	public BondTrade mapCreateXmlObject(String fixMessage) {
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
 		StringBuilder xml = new StringBuilder();

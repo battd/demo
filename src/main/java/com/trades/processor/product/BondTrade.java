@@ -23,8 +23,19 @@ public class BondTrade implements Trade {
 	private String price;
 	@XmlElement(name = "Quantity")
 	private String quantity;
+	@XmlElement(name = "RiskBook")
+	private String riskBook;
 
 	
+	public String getRiskBook() {
+		return riskBook;
+	}
+
+	@XmlTransient
+	public void setRiskBook(String riskBook) {
+		this.riskBook = riskBook;
+	}
+
 	public String getTradeDate() {
 		return tradeDate;
 	}
