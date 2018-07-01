@@ -23,7 +23,7 @@ public class AccountCacheEnricherImpl implements AccountEnricher{
 	       
 		try {
 
-			String theBook = bookCache.getBookCache().get(trader).getBookId();
+			String theBook = bookCache.getBook(trader).getBookId();
 			LOGGER.info("The book name is: " + theBook);
 			return theBook;
 		} catch (Exception e) {

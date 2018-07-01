@@ -33,9 +33,9 @@ public class ManualBookUpdateSimulator implements Runnable {
 		for(int i=0;i<10000;i++) {
 			try {
 			Integer index = r.nextInt(2);			
-			Book b = bookCache.getBookCache().get(traders[index]);
+			Book b = bookCache.getBook(traders[index]);
 			b.setBookId("GEN" + i);
-			bookCache.getBookCache().put(b.getTraderId(), b);
+			//bookCache.putBook(b);
 			LOGGER.info("Updated Book " + b.getBookId());			
 			Thread.sleep(200);
 			} catch (InterruptedException e) {

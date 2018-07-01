@@ -1,5 +1,6 @@
 package com.trades.processor.caches;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
@@ -7,14 +8,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookCacheImpl implements BookCache  {	
 	
-	private ConcurrentHashMap<String, Book> bookMap = new ConcurrentHashMap<>();
+	private Map<String, Book> bookMap = new ConcurrentHashMap<String, Book>();
 	
-	/* (non-Javadoc)
-	 * @see com.trades.processor.caches.BookCache#getBookCache()
-	 */
 	@Override
-	public ConcurrentHashMap<String, Book> getBookCache() {
-		return bookMap;
+	public Book getBook(String traderId) {
+		return bookMap.get(traderId);
+	}
+	
+	@Override
+	public void putBook(Book book) {
+		bookMap.put(book.getTraderId(), book);
 	}
 
 	public BookCacheImpl() {

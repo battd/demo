@@ -3,7 +3,9 @@ package com.trades.processor.demo;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -74,18 +76,10 @@ public class FixTradeProcessorImpl implements FixTradeProcessor {
 		xml.append("<NewTrade>");
 		
 		String[] fixarray = fixMessage.split(";");
+				
+		Map<String, String> fixMap = (Map<String, String>) Arrays.stream(fixarray).map(s->s.split("="))
+											.collect(Collectors.toMap(v->v[0], v->v[1]));		
 		
-		HashMap<String, String> fixMap = new HashMap<String,String>();
-		String fixKey;
-		String fixValue;
-		
-		for(String item : fixarray) {
-   			fixKey = item.split("=")[0];
-			fixValue = item.split("=")[1];
-			System.out.println(fixKey + " " + fixValue);
-			fixMap.put(fixKey, fixValue);  
-			
-		}
 		
 	   try {
 		   builder = builderFactory.newDocumentBuilder();
