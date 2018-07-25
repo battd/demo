@@ -5,11 +5,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
 
+import com.trades.processor.utils.ProcessorDAO;
+
 @Component
 public class BookCacheImpl implements BookCache  {	
 	
 	private Map<String, Book> bookMap = new ConcurrentHashMap<String, Book>();
-	
 	@Override
 	public Book getBook(String traderId) {
 		return bookMap.get(traderId);
@@ -20,7 +21,9 @@ public class BookCacheImpl implements BookCache  {
 		bookMap.put(book.getTraderId(), book);
 	}
 
-	public BookCacheImpl() {
+	public BookCacheImpl(ProcessorDAO processorDAO) {
+		processorDAO.getBooks();
+		
 		Book primeBook = new Book();
 		primeBook.setTraderId("davidb");
 		primeBook.setBookId("MAIN");

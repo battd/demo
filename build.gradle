@@ -40,7 +40,8 @@ dependencies {
     compile ('com.sun.xml.bind:jaxb-core:2.2.11')
     compile ('javax.activation:activation:1.1.1')
     compile ('commons-io:commons-io:2.6')
-	runtime('com.microsoft.sqlserver:mssql-jdbc')
+    compile ('com.microsoft.sqlserver:mssql-jdbc:6.4.0.jre9')
+	runtime ('com.microsoft.sqlserver:mssql-jdbc')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.mockito:mockito-core:2.7.22')
 }

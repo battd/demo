@@ -41,8 +41,7 @@ public class FixTradeProcessorImpl implements FixTradeProcessor {
 	}
 
 	@Override
-	@ServiceActivator(inputChannel = "fixTradeChannel")
-	//Template Method Operations
+	@ServiceActivator(inputChannel = "fixTradeChannel")	
 	public void processTrade(String string) {
 		
 		BondTrade trade = mapCreateXmlObject(string);
@@ -93,7 +92,6 @@ public class FixTradeProcessorImpl implements FixTradeProcessor {
 	       for (int i = 1; i < nl.getLength(); i++) {			 
 	    	   nodeKey = nl.item(i).getAttributes().getNamedItem("tag").getTextContent();
 	    	   nodeName = nl.item(i).getNodeName().toString();
-	    	   System.out.println(" nodeValue=" + nodeName + " nodeKey=" + nodeKey);
 	    	   xml.append("<" + nodeName + ">");
 	    	   xml.append(fixMap.get(nodeKey));
 	    	   xml.append("</" + nodeName + ">");			 

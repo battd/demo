@@ -33,17 +33,10 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-        for (int t=0;t<200;t++) {
-    		tradeSimulatorImpl.Simulate();
-    		try {
-				Thread.sleep(400);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-    	}
-    }  
-        
+	  Runnable simulate = () -> tradeSimulatorImpl.Simulate();
+      taskExecutor.execute(simulate); 
       taskExecutor.execute(manualBookUpdateSimulator);
+      
 		
 	}
 

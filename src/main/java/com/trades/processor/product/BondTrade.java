@@ -25,8 +25,47 @@ public class BondTrade implements Trade {
 	private String quantity;
 	@XmlElement(name = "RiskBook")
 	private String riskBook;
+	@XmlElement(name = "IDM")
+	private String idm;
+	@XmlElement(name = "EDM")
+	private String edm;
+	@XmlElement(name = "LEI")
+	private String lei;
+	@XmlElement(name = "Basis")
+	private boolean isBasis;
 
 	
+	public boolean isBasis() {
+		return isBasis;
+	}
+	@XmlTransient
+	public void setBasis(boolean isBasis) {
+		this.isBasis = isBasis;
+	}
+	public String getIdm() {
+		return idm;
+	}
+	@XmlTransient
+	public void setIdm(String idm) {
+		this.idm = idm;
+	}
+
+	public String getEdm() {
+		return edm;
+	}
+	@XmlTransient
+	public void setEdm(String edm) {
+		this.edm = edm;
+	}
+
+	public String getLei() {
+		return lei;
+	}
+	@XmlTransient 
+	public void setLei(String lei) {
+		this.lei = lei;
+	}
+
 	public String getRiskBook() {
 		return riskBook;
 	}
